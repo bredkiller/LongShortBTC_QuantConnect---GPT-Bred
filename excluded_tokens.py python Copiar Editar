@@ -1,0 +1,6 @@
+# Lista de tokens extintos, hackeados ou abandonados que devem ser excluídos da estratégia
+EXCLUDED_TOKENS = {
+    "FTTUSD", "LUNCUSD", "USTUSD", "VGXUSD", "TITANUSD",
+    "YAMUSD", "BCCUSD", "MIRUSD", "ICXUSD", "HOTUSD",
+    "AMPUSD", "STRKUSD"
+}
