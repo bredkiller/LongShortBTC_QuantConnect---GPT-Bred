@@ -41,8 +41,7 @@ class LongShortBitcoinBeta(QCAlgorithm):
         from excluded_tokens import EXCLUDED_TOKENS
         self.excluded_tokens = EXCLUDED_TOKENS
 
-        }
-
+    
     def UniverseSelectionFilter(self, data):
         # Evita rebalancear constantemente
         if self.RebalancingTime > self.Time:
