@@ -38,10 +38,9 @@ class LongShortBitcoinBeta(QCAlgorithm):
         self.RebalancingTime = datetime.min
 
         # Tokens que devem ser excluídos (mortos, extintos, hackeados ou descontinuados)
-        self.excluded_tokens = {
-            "FTTUSD", "LUNCUSD", "USTUSD", "VGXUSD", "TITANUSD",
-            "YAMUSD", "BCCUSD", "MIRUSD", "ICXUSD", "HOTUSD",
-            "AMPUSD", "STRKUSD"
+        from excluded_tokens import EXCLUDED_TOKENS
+        self.excluded_tokens = EXCLUDED_TOKENS
+
         }
 
     def UniverseSelectionFilter(self, data):
