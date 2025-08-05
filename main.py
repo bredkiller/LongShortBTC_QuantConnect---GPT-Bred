@@ -1,29 +1,32 @@
 # region imports
 from AlgorithmImports import *
+from datetime import timedelta
 from portfolio import BetaNeutralMeanVariancePortfolioConstructionModel
 # endregion
 
 class LongShortBitcoinBeta(QCAlgorithm):
 
     def Initialize(self):
+        # Parâmetros iniciais
         self.SetStartDate(2020, 1, 1)
         self.SetEndDate(datetime.now())
-        self.SetCash(25000)  # Set Strategy Cash
+        self.SetCash(25000)
 
+        # Exchange e tipo de conta
         self.SetBrokerageModel(BrokerageName.Kraken, AccountType.Margin)
 
-        # Definindo o benchmark como BTC/USD
+        # Benchmark definido como BTC/USD (Kraken)
         btc = self.AddCrypto("BTCUSD", Resolution.Hour, Market.Kraken).Symbol
         self.SetBenchmark(btc)
 
-        # Universo dinâmico baseado em volume, com filtro de tokens mortos
+        # Universo dinâmico baseado em volume (filtrando tokens mortos)
         self.UniverseSettings.Resolution = Resolution.Minute
         self.AddUniverse(CryptoCoarseFundamentalUniverse(Market.Kraken, self.UniverseSettings, self.UniverseSelectionFilter))
 
-        # Modelo de Alpha simples para ativar entradas simuladas
+        # Alpha simples com sinal de compra a cada 90 dias
         self.AddAlpha(ConstantAlphaModel(InsightType.Price, InsightDirection.Up, timedelta(90)))
 
-        # Construtor de portfólio customizado (já implementado no arquivo portfolio.py)
+        # Modelo de portfólio externo (arquivo portfolio.py)
         pcm = BetaNeutralMeanVariancePortfolioConstructionModel(
             algorithm=self,
             benchmark=self.benchmark,
@@ -32,9 +35,8 @@ class LongShortBitcoinBeta(QCAlgorithm):
         )
         self.SetPortfolioConstruction(pcm)
 
-        # Execution e risco simples por enquanto
-        self.SetExecution(ImmediateExecutionModel())
-        self.SetRiskManagement(NullRiskManagementModel())
-
+    # Filtro do universo: tokens com volume e preço válidos
     def UniverseSelectionFilter(self, coarse):
-        return [x.Symbol for x in sorted(coarse, key=lambda x: x.DollarVolume, reverse=True)[:10]]
+        filtered = [x for x in coarse if x.Price is not None and x.Volume is not None]
+        sorted_by_volume = sorted(filtered, key=lambda x: x.Price * x.Volume, reverse=True)
+        return [x.Symbol for x in sorted_by_volume[:10]]
