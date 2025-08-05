@@ -6,9 +6,9 @@ from portfolio import BetaNeutralMeanVariancePortfolioConstructionModel
 class LongShortBitcoinBeta(QCAlgorithm):
 
     def Initialize(self):
-        self.SetStartDate(2018, 8, 5)
+        self.SetStartDate(2020, 1, 1)
         self.SetEndDate(datetime.now())
-        self.SetCash(1000000)  # Set Strategy Cash
+        self.SetCash(25000)  # Set Strategy Cash
 
         self.SetBrokerageModel(BrokerageName.Kraken, AccountType.Margin)
 
